@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+
+    /* Put your background image in the same folder and name it background.jpg */
+    background:
+        linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)),
+        url("background.jpg") center / cover no-repeat;
+
+    overflow: hidden;
+}
+
+.container {
+    width: 94%;
+    max-width: 1100px;
+}
+
+.title {
+    font-size: clamp(22px, 4vw, 42px);
+    line-height: 1.35;
+    margin-bottom: 35px;
+    text-shadow: 0 3px 15px black;
+}
+
+.title strong {
+    font-weight: 700;
+}
+
+/* ONE SINGLE COUNTDOWN BAR */
+.countdown-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    padding: 14px 10px;
+
+    background: rgba(0, 0, 0, .65);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 20px;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow: 0 10px 40px rgba(0,0,0,.7);
+}
+
+.unit {
+    flex: 1;
+    min-width: 0;
+    padding: 5px 8px;
+
+    border-right: 1px solid rgba(255,255,255,.18);
+}
+
+.unit:last-child {
+    border-right: none;
+}
+
+.number {
+    font-size: clamp(22px, 4vw, 42px);
+    font-weight: bold;
+}
+
+.label {
+    margin-top: 4px;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: .5;
+}
+
+@media (max-width: 600px) {
+    .countdown-bar {
+        padding: 10px 3px;
+    }
+
+    .unit {
+        padding: 4px 2px;
+    }
+
+    .number {
+        font-size: 20px;
+    }
+
+    .label {
+        font-size: 7px;
+        letter-spacing: 1px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="title">
+        If Mel and Maddox are still together in
+        <strong>1 Year and 6 Months</strong>,
+        I am a failure.
+    </div>
+
+    <div class="countdown-bar">
+
+        <div class="unit">
+            <div class="number" id="years">0</div>
+            <div class="label">Years</div>
+        </div>
+
+        <div class="unit">
+            <div class="number" id="months">0</div>
+            <div class="label">Months</div>
+        </div>
+
+        <div class="unit">
+            <div class="number" id="weeks">0</div>
+            <div class="label">Weeks</div>
+        </div>
+
+        <div class="unit">
+            <div class="number" id="days">0</div>
+            <div class="label">Days</div>
+        </div>
+
+        <div class="unit">
+            <div class="number" id="hours">0</div>
+            <div class="label">Hours</div>
+        </div>
+
+        <div class="unit">
+            <div class="number" id="minutes">0</div>
+            <div class="label">Minutes</div>
+        </div>
+
+        <div class="unit">
+            <div class="number" id="seconds">0</div>
+            <div class="label">Seconds</div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+const target = new Date("March 3, 2028 00:00:00");
+
+function updateCountdown() {
+
+    const now = new Date();
+
+    if (now >= target) {
+        document.querySelector(".countdown-bar").innerHTML =
+            '<div class="number">TIME IS UP.</div>';
+        return;
+    }
+
+    let years = target.getFullYear() - now.getFullYear();
+    let months = target.getMonth() - now.getMonth();
+
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+
+    const calendarDate = new Date(now);
+
+    calendarDate.setFullYear(
+        calendarDate.getFullYear() + years
+    );
+
+    calendarDate.setMonth(
+        calendarDate.getMonth() + months
+    );
+
+    let remaining = target - calendarDate;
+
+    const weeks = Math.floor(
+        remaining / (1000 * 60 * 60 * 24 * 7)
+    );
+
+    remaining -= weeks * 1000 * 60 * 60 * 24 * 7;
+
+    const days = Math.floor(
+        remaining / (1000 * 60 * 60 * 24)
+    );
+
+    remaining -= days * 1000 * 60 * 60 * 24;
+
+    const hours = Math.floor(
+        remaining / (1000 * 60 * 60)
+    );
+
+    remaining -= hours * 1000 * 60 * 60;
+
+    const minutes = Math.floor(
+        remaining / (1000 * 60)
+    );
+
+    remaining -= minutes * 1000 * 60;
+
+    const seconds = Math.floor(remaining / 1000);
+
+    document.getElementById("years").textContent = years;
+    document.getElementById("months").textContent = months;
+    document.getElementById("weeks").textContent = weeks;
+    document.getElementById("days").textContent = days;
+    document.getElementById("hours").textContent = hours;
+    document.getElementById("minutes").textContent = minutes;
+    document.getElementById("seconds").textContent = seconds;
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+</script>
+
+</body>
+</html>
