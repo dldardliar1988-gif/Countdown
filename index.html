@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Countdown</title>
 
 <style>
@@ -13,15 +14,15 @@
 body {
     margin: 0;
     min-height: 100vh;
+
     display: flex;
     align-items: center;
     justify-content: center;
 
     color: white;
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     text-align: center;
 
-    /* Put your background image in the same folder and name it background.jpg */
     background:
         linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)),
         url("background.jpg") center / cover no-repeat;
@@ -29,15 +30,71 @@ body {
     overflow: hidden;
 }
 
+/* ENTER SCREEN */
+
+#enterScreen {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0,0,0,.65);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    z-index: 10;
+}
+
+#enterButton {
+    padding: 18px 55px;
+
+    border: 1px solid rgba(255,255,255,.4);
+    border-radius: 50px;
+
+    background: rgba(255,255,255,.08);
+    color: white;
+
+    font-size: 18px;
+    letter-spacing: 4px;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    transition: .25s;
+}
+
+#enterButton:hover {
+    background: rgba(255,255,255,.18);
+    transform: scale(1.04);
+}
+
+/* MAIN CONTENT */
+
 .container {
     width: 94%;
     max-width: 1100px;
+
+    opacity: 0;
+    transform: translateY(15px);
+
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.container.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .title {
     font-size: clamp(22px, 4vw, 42px);
     line-height: 1.35;
+
     margin-bottom: 35px;
+
     text-shadow: 0 3px 15px black;
 }
 
@@ -45,7 +102,8 @@ body {
     font-weight: 700;
 }
 
-/* ONE SINGLE COUNTDOWN BAR */
+/* SINGLE COUNTDOWN BAR */
+
 .countdown-bar {
     display: flex;
     align-items: center;
@@ -54,7 +112,8 @@ body {
     width: 100%;
     padding: 14px 10px;
 
-    background: rgba(0, 0, 0, .65);
+    background: rgba(0,0,0,.65);
+
     border: 1px solid rgba(255,255,255,.3);
     border-radius: 20px;
 
@@ -67,6 +126,7 @@ body {
 .unit {
     flex: 1;
     min-width: 0;
+
     padding: 5px 8px;
 
     border-right: 1px solid rgba(255,255,255,.18);
@@ -83,13 +143,18 @@ body {
 
 .label {
     margin-top: 4px;
+
     font-size: 9px;
     letter-spacing: 2px;
+
     text-transform: uppercase;
     opacity: .5;
 }
 
+/* MOBILE */
+
 @media (max-width: 600px) {
+
     .countdown-bar {
         padding: 10px 3px;
     }
@@ -112,7 +177,23 @@ body {
 
 <body>
 
-<div class="container">
+<!-- ENTER SCREEN -->
+
+<div id="enterScreen">
+    <button id="enterButton">
+        ENTER
+    </button>
+</div>
+
+<!-- MUSIC -->
+
+<audio id="music" loop>
+    <source src="videoplayback.m4a" type="audio/mp4">
+</audio>
+
+<!-- COUNTDOWN -->
+
+<div class="container" id="main">
 
     <div class="title">
         If Mel and Maddox are still together in
@@ -162,6 +243,34 @@ body {
 </div>
 
 <script>
+
+/* MUSIC + ENTER */
+
+const enterScreen = document.getElementById("enterScreen");
+const enterButton = document.getElementById("enterButton");
+const music = document.getElementById("music");
+const main = document.getElementById("main");
+
+music.volume = 0.5;
+
+enterButton.addEventListener("click", () => {
+
+    music.play();
+
+    enterScreen.style.opacity = "0";
+    enterScreen.style.pointerEvents = "none";
+
+    main.classList.add("visible");
+
+    setTimeout(() => {
+        enterScreen.style.display = "none";
+    }, 1000);
+
+});
+
+
+/* COUNTDOWN */
+
 const target = new Date("March 3, 2028 00:00:00");
 
 function updateCountdown() {
@@ -169,13 +278,18 @@ function updateCountdown() {
     const now = new Date();
 
     if (now >= target) {
+
         document.querySelector(".countdown-bar").innerHTML =
             '<div class="number">TIME IS UP.</div>';
+
         return;
     }
 
-    let years = target.getFullYear() - now.getFullYear();
-    let months = target.getMonth() - now.getMonth();
+    let years =
+        target.getFullYear() - now.getFullYear();
+
+    let months =
+        target.getMonth() - now.getMonth();
 
     if (months < 0) {
         years--;
@@ -198,39 +312,60 @@ function updateCountdown() {
         remaining / (1000 * 60 * 60 * 24 * 7)
     );
 
-    remaining -= weeks * 1000 * 60 * 60 * 24 * 7;
+    remaining -=
+        weeks * 1000 * 60 * 60 * 24 * 7;
 
     const days = Math.floor(
         remaining / (1000 * 60 * 60 * 24)
     );
 
-    remaining -= days * 1000 * 60 * 60 * 24;
+    remaining -=
+        days * 1000 * 60 * 60 * 24;
 
     const hours = Math.floor(
         remaining / (1000 * 60 * 60)
     );
 
-    remaining -= hours * 1000 * 60 * 60;
+    remaining -=
+        hours * 1000 * 60 * 60;
 
     const minutes = Math.floor(
         remaining / (1000 * 60)
     );
 
-    remaining -= minutes * 1000 * 60;
+    remaining -=
+        minutes * 1000 * 60;
 
-    const seconds = Math.floor(remaining / 1000);
+    const seconds =
+        Math.floor(remaining / 1000);
 
-    document.getElementById("years").textContent = years;
-    document.getElementById("months").textContent = months;
-    document.getElementById("weeks").textContent = weeks;
-    document.getElementById("days").textContent = days;
-    document.getElementById("hours").textContent = hours;
-    document.getElementById("minutes").textContent = minutes;
-    document.getElementById("seconds").textContent = seconds;
+
+    document.getElementById("years").textContent =
+        years;
+
+    document.getElementById("months").textContent =
+        months;
+
+    document.getElementById("weeks").textContent =
+        weeks;
+
+    document.getElementById("days").textContent =
+        days;
+
+    document.getElementById("hours").textContent =
+        hours;
+
+    document.getElementById("minutes").textContent =
+        minutes;
+
+    document.getElementById("seconds").textContent =
+        seconds;
 }
 
 updateCountdown();
+
 setInterval(updateCountdown, 1000);
+
 </script>
 
 </body>
