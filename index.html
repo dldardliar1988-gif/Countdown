@@ -6,230 +6,344 @@
 <title>Countdown</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    body {
-        min-height: 100vh;
-        font-family: Arial, sans-serif;
-        color: white;
+body {
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    color: white;
 
-        background:
-            linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)),
-            url("background.jpg") center / cover no-repeat;
+    background:
+        linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)),
+        url("background.jpg") center / cover no-repeat;
 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
 
-    /* Dark glass overlay */
-    #main {
-        width: 95%;
-        max-width: 1100px;
-        text-align: center;
-    }
+#main {
+    width: 95%;
+    max-width: 1100px;
+    text-align: center;
+}
 
-    h1 {
-        font-size: clamp(28px, 5vw, 55px);
-        margin-bottom: 35px;
-        text-shadow: 0 0 20px rgba(255,255,255,.35);
-    }
+h1 {
+    font-size: clamp(28px, 5vw, 55px);
+    margin-bottom: 35px;
+    text-shadow: 0 0 20px rgba(255,255,255,.35);
+}
 
-    /* Countdown bar */
+#countdown {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 20px;
+
+    box-shadow:
+        0 0 30px rgba(0,0,0,.5),
+        inset 0 0 20px rgba(255,255,255,.03);
+
+    overflow: hidden;
+}
+
+.unit {
+    flex: 1;
+    padding: 22px 10px;
+    min-width: 0;
+}
+
+.unit:not(:last-child) {
+    border-right: 1px solid rgba(255,255,255,.15);
+}
+
+.number {
+    font-size: clamp(20px, 4vw, 42px);
+    font-weight: bold;
+    text-shadow: 0 0 15px rgba(255,255,255,.3);
+}
+
+.label {
+    margin-top: 6px;
+    font-size: clamp(9px, 1.5vw, 14px);
+    opacity: .6;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ENTER SCREEN */
+
+#enterScreen {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0,0,0,.9);
+    z-index: 1000;
+}
+
+#enterButton {
+    padding: 18px 55px;
+    font-size: 22px;
+    font-weight: bold;
+
+    color: white;
+    background: rgba(255,255,255,.08);
+
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 15px;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    box-shadow: 0 0 30px rgba(255,255,255,.08);
+
+    transition: .25s;
+}
+
+#enterButton:hover {
+    transform: scale(1.05);
+    background: rgba(255,255,255,.15);
+    box-shadow: 0 0 40px rgba(255,255,255,.2);
+}
+
+/* TOP BUTTONS */
+
+#surpriseButton,
+#cvButton {
+    position: fixed;
+    top: 20px;
+
+    padding: 12px 24px;
+
+    color: white;
+    background: rgba(0,0,0,.5);
+
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 12px;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    cursor: pointer;
+    font-size: 15px;
+
+    z-index: 100;
+    transition: .25s;
+}
+
+#surpriseButton {
+    left: calc(50% - 145px);
+}
+
+#cvButton {
+    left: calc(50% + 55px);
+}
+
+#surpriseButton:hover,
+#cvButton:hover {
+    transform: scale(1.05);
+    background: rgba(255,255,255,.12);
+}
+
+/* SURPRISE IMAGE */
+
+#surpriseImage {
+    position: fixed;
+
+    top: 75px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    max-width: 85vw;
+    max-height: 65vh;
+
+    object-fit: contain;
+
+    border-radius: 15px;
+
+    border: 1px solid rgba(255,255,255,.2);
+
+    box-shadow:
+        0 0 40px rgba(0,0,0,.8),
+        0 0 20px rgba(255,255,255,.08);
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: opacity .3s;
+
+    z-index: 99;
+}
+
+#surpriseImage.show {
+    opacity: 1;
+}
+
+/* CV */
+
+#cvOverlay {
+    position: fixed;
+    inset: 0;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    background: rgba(0,0,0,.85);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    z-index: 500;
+}
+
+#cvBox {
+    position: relative;
+
+    width: 95%;
+    max-width: 800px;
+    max-height: 85vh;
+
+    overflow-y: auto;
+
+    padding: 35px;
+
+    color: white;
+    background: rgba(20,20,20,.95);
+
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 18px;
+
+    box-shadow: 0 0 50px rgba(0,0,0,.8);
+
+    text-align: left;
+}
+
+#cvBox h2 {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+#parodyNotice {
+    text-align: center;
+    opacity: .55;
+    font-size: 12px;
+    margin-bottom: 30px;
+}
+
+#cvBox h3 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#cvBox p,
+#cvBox li {
+    line-height: 1.6;
+}
+
+#cvBox ul {
+    padding-left: 25px;
+}
+
+#closeCV {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+
+    background: none;
+    border: none;
+    color: white;
+
+    font-size: 22px;
+    cursor: pointer;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
     #countdown {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: stretch;
-
-        background: rgba(0,0,0,.55);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-
-        border: 1px solid rgba(255,255,255,.15);
-        border-radius: 20px;
-
-        box-shadow:
-            0 0 30px rgba(0,0,0,.5),
-            inset 0 0 20px rgba(255,255,255,.03);
-
-        overflow: hidden;
+        border-radius: 14px;
     }
 
     .unit {
-        flex: 1;
-        padding: 22px 10px;
-        min-width: 0;
-    }
-
-    .unit:not(:last-child) {
-        border-right: 1px solid rgba(255,255,255,.15);
+        padding: 15px 4px;
     }
 
     .number {
-        font-size: clamp(20px, 4vw, 42px);
-        font-weight: bold;
-        text-shadow: 0 0 15px rgba(255,255,255,.3);
+        font-size: 18px;
     }
 
     .label {
-        margin-top: 6px;
-        font-size: clamp(9px, 1.5vw, 14px);
-        opacity: .6;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        font-size: 7px;
+        letter-spacing: .5px;
     }
 
-    /* ENTER screen */
-    #enterScreen {
-        position: fixed;
-        inset: 0;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        background: rgba(0,0,0,.9);
-        z-index: 1000;
+    h1 {
+        margin-bottom: 25px;
     }
 
-    #enterButton {
-        padding: 18px 55px;
-        font-size: 22px;
-        font-weight: bold;
-
-        color: white;
-        background: rgba(255,255,255,.08);
-
-        border: 1px solid rgba(255,255,255,.3);
-        border-radius: 15px;
-
-        cursor: pointer;
-
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-
-        box-shadow: 0 0 30px rgba(255,255,255,.08);
-
-        transition: .25s;
+    #surpriseButton,
+    #cvButton {
+        padding: 10px 16px;
+        font-size: 13px;
     }
 
-    #enterButton:hover {
-        transform: scale(1.05);
-        background: rgba(255,255,255,.15);
-        box-shadow: 0 0 40px rgba(255,255,255,.2);
-    }
-
-    /* Surprise button */
     #surpriseButton {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-
-        padding: 12px 24px;
-
-        color: white;
-        background: rgba(0,0,0,.5);
-
-        border: 1px solid rgba(255,255,255,.2);
-        border-radius: 12px;
-
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-
-        cursor: pointer;
-        font-size: 15px;
-
-        z-index: 100;
-        transition: .25s;
+        left: calc(50% - 115px);
     }
 
-    #surpriseButton:hover {
-        transform: translateX(-50%) scale(1.05);
-        background: rgba(255,255,255,.12);
+    #cvButton {
+        left: calc(50% + 50px);
     }
 
-    /* Surprise image */
-    #surpriseImage {
-        position: fixed;
-
-        top: 75px;
-        left: 50%;
-
-        transform: translateX(-50%);
-
-        max-width: 85vw;
-        max-height: 65vh;
-
-        object-fit: contain;
-
-        border-radius: 15px;
-
-        border: 1px solid rgba(255,255,255,.2);
-
-        box-shadow:
-            0 0 40px rgba(0,0,0,.8),
-            0 0 20px rgba(255,255,255,.08);
-
-        opacity: 0;
-        pointer-events: none;
-
-        transition: opacity .3s;
-
-        z-index: 99;
+    #cvBox {
+        padding: 25px 20px;
     }
-
-    #surpriseImage.show {
-        opacity: 1;
-    }
-
-    /* Mobile */
-    @media (max-width: 600px) {
-
-        #countdown {
-            border-radius: 14px;
-        }
-
-        .unit {
-            padding: 15px 4px;
-        }
-
-        .number {
-            font-size: 18px;
-        }
-
-        .label {
-            font-size: 7px;
-            letter-spacing: .5px;
-        }
-
-        h1 {
-            margin-bottom: 25px;
-        }
-    }
+}
 </style>
 </head>
 
 <body>
 
 <!-- ENTER SCREEN -->
+
 <div id="enterScreen">
     <button id="enterButton">ENTER</button>
 </div>
 
-<!-- SURPRISE BUTTON -->
+<!-- TOP BUTTONS -->
+
 <button id="surpriseButton">Surprise me!</button>
+<button id="cvButton">CV</button>
 
 <!-- RANDOM IMAGE -->
+
 <img id="surpriseImage" src="" alt="Surprise image">
 
 <!-- MAIN CONTENT -->
+
 <div id="main">
 
     <h1>Countdown</h1>
@@ -274,116 +388,277 @@
     </div>
 </div>
 
+<!-- CV -->
+
+<div id="cvOverlay">
+
+    <div id="cvBox">
+
+        <button id="closeCV">✕</button>
+
+        <h2>CURRICULUM VITAE</h2>
+
+        <p id="parodyNotice">
+            FICTIONAL PARODY — NOT A REAL CV
+        </p>
+
+        <p>
+            <strong>Name:</strong> Maddox Mills<br>
+            <strong>Age:</strong> 28<br>
+            <strong>Occupation:</strong> Discord<br>
+            <strong>Location:</strong> Kenn
+        </p>
+
+        <h3>Professional Profile</h3>
+
+        <p>
+            Unemployed individual with a highly inconsistent employment
+            history (none) and an inability to maintain long-term
+            commitments (like relationships). Possesses experience in
+            avoiding responsibility, missing neurons, and turning relatively
+            manageable situations into complicated personal disasters.
+        </p>
+
+        <p>
+            Despite numerous opportunities for improvement, Maddoxander
+            "I was Busy tho" Millkinson has consistently demonstrated
+            remarkable resistance to personal development.
+        </p>
+
+        <h3>Employment History</h3>
+
+        <p>
+            <strong>2025 — 2026 carious Temporary Jobs</strong>
+        </p>
+
+        <ul>
+            <li>Frequently changed workplaces. (Jujutsu Shenanigans-->GTA 5)</li>
+            <li>Developed a reputation for unreliable attendance (and stealing food)</li>
+            <li>Left multiple positions without properly resolving outstanding responsibilities.</li>
+            <li>Demonstrated limited interest in career progression (reportedly only joined for the food)</li>
+        </ul>
+
+        <p>
+            <strong>Jan. 2026–Present — Unemployed</strong>
+        </p>
+
+        <ul>
+            <li>No stable employment. (PIP)</li>
+            <li>Spends considerable time attempting to solve problems that are largely consequences of his own previous decisions.</li>
+            <li>Career development currently nonexistent.</li>
+        </ul>
+
+        <h3>Skills</h3>
+
+        <ul>
+            <li>Exceptional ability to eat food</li>
+            <li>Strong experience in avoiding difficult conversations</li>
+            <li>Advanced procrastination</li>
+            <li>Can turn a minor inconvenience into a personal crisis</li>
+            <li>Limited proficiency in taking responsibility.</li>
+            <li>Highly experienced in disappointing people who expected better.</li>
+        </ul>
+
+        <h3>Relationships</h3>
+
+        <p>
+            Romantic relationships: Multiple unsuccessful relationships.
+        </p>
+
+        <p>Common contributing factors include:</p>
+
+        <ul>
+            <li>Poor communication. (Always)</li>
+            <li>Lack of reliability. (Always)</li>
+            <li>Difficulty accepting responsibility. (Always)</li>
+            <li>Repeatedly making promises that were not kept. (Always)</li>
+            <li>Emotional unavailability. (Always)</li>
+        </ul>
+
+        <p>
+            <strong>Current relationship status:</strong> Single. (Always)
+        </p>
+
+        <h3>Personal Circumstances</h3>
+
+        <p>
+            A has struggled with substance-related issues and currently lacks
+            stable employment. These difficulties and repeated irresponsibility
+            have contributed significantly to the deterioration of his
+            relationships, finances, and general quality of life.
+        </p>
+
+        <p>
+            He is also described by people who know him as a deadbeat,
+            (Rosie, Dldarius, Kelsei, Joe, Cafia, Juni, etc.) largely because
+            he repeatedly fails to fulfill obligations and leaves other
+            people to deal with the consequences.
+        </p>
+
+        <h3>Education</h3>
+
+        <p>
+            <strong>Formal education:</strong> Incomplete / unspecified. (Kicked)
+        </p>
+
+        <p>
+            <strong>Relevant qualifications:</strong> None currently worth
+            mentioning. (Stole cafeteria food)
+        </p>
+
+        <h3>References</h3>
+
+        <p>
+            SCR 2025-2026
+        </p>
+
+    </div>
+</div>
+
 <!-- MUSIC -->
+
 <audio id="music" loop>
     <source src="videoplayback.m4a" type="audio/mp4">
 </audio>
 
 <script>
 
-    /* =========================
-       COUNTDOWN
-    ========================= */
+/* =========================
+   COUNTDOWN
+========================= */
 
-    const target = new Date("March 4, 2028 00:00:00");
+const target = new Date("March 4, 2028 00:00:00");
 
-    function updateCountdown() {
+function updateCountdown() {
 
-        const now = new Date();
-        let difference = target - now;
+    const now = new Date();
+    let difference = target - now;
 
-        if (difference <= 0) {
-            document.getElementById("years").textContent = "0";
-            document.getElementById("months").textContent = "0";
-            document.getElementById("weeks").textContent = "0";
-            document.getElementById("days").textContent = "0";
-            document.getElementById("hours").textContent = "0";
-            document.getElementById("minutes").textContent = "0";
-            document.getElementById("seconds").textContent = "0";
-            return;
-        }
-
-        const secondsTotal = Math.floor(difference / 1000);
-
-        const seconds = secondsTotal % 60;
-        const minutes = Math.floor(secondsTotal / 60) % 60;
-        const hours = Math.floor(secondsTotal / 3600) % 24;
-
-        const totalDays = Math.floor(secondsTotal / 86400);
-
-        const years = Math.floor(totalDays / 365);
-        const remainingDaysAfterYears = totalDays % 365;
-
-        const months = Math.floor(remainingDaysAfterYears / 30);
-        const remainingDays = remainingDaysAfterYears % 30;
-
-        const weeks = Math.floor(remainingDays / 7);
-        const days = remainingDays % 7;
-
-        document.getElementById("years").textContent = years;
-        document.getElementById("months").textContent = months;
-        document.getElementById("weeks").textContent = weeks;
-        document.getElementById("days").textContent = days;
-
-        document.getElementById("hours").textContent =
-            String(hours).padStart(2, "0");
-
-        document.getElementById("minutes").textContent =
-            String(minutes).padStart(2, "0");
-
-        document.getElementById("seconds").textContent =
-            String(seconds).padStart(2, "0");
+    if (difference <= 0) {
+        document.getElementById("years").textContent = "0";
+        document.getElementById("months").textContent = "0";
+        document.getElementById("weeks").textContent = "0";
+        document.getElementById("days").textContent = "0";
+        document.getElementById("hours").textContent = "0";
+        document.getElementById("minutes").textContent = "0";
+        document.getElementById("seconds").textContent = "0";
+        return;
     }
 
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+    const secondsTotal = Math.floor(difference / 1000);
+
+    const seconds = secondsTotal % 60;
+    const minutes = Math.floor(secondsTotal / 60) % 60;
+    const hours = Math.floor(secondsTotal / 3600) % 24;
+
+    const totalDays = Math.floor(secondsTotal / 86400);
+
+    const years = Math.floor(totalDays / 365);
+    const remainingDaysAfterYears = totalDays % 365;
+
+    const months = Math.floor(remainingDaysAfterYears / 30);
+    const remainingDays = remainingDaysAfterYears % 30;
+
+    const weeks = Math.floor(remainingDays / 7);
+    const days = remainingDays % 7;
+
+    document.getElementById("years").textContent = years;
+    document.getElementById("months").textContent = months;
+    document.getElementById("weeks").textContent = weeks;
+    document.getElementById("days").textContent = days;
+
+    document.getElementById("hours").textContent =
+        String(hours).padStart(2, "0");
+
+    document.getElementById("minutes").textContent =
+        String(minutes).padStart(2, "0");
+
+    document.getElementById("seconds").textContent =
+        String(seconds).padStart(2, "0");
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
 
 
-    /* =========================
-       MUSIC / ENTER BUTTON
-    ========================= */
+/* =========================
+   MUSIC / ENTER
+========================= */
 
-    const enterScreen = document.getElementById("enterScreen");
-    const enterButton = document.getElementById("enterButton");
-    const music = document.getElementById("music");
+const enterScreen = document.getElementById("enterScreen");
+const enterButton = document.getElementById("enterButton");
+const music = document.getElementById("music");
 
-    enterButton.addEventListener("click", () => {
+enterButton.addEventListener("click", () => {
 
-        music.play().catch(error => {
-            console.log("Music could not start:", error);
-        });
-
-        enterScreen.style.display = "none";
+    music.play().catch(error => {
+        console.log("Music could not start:", error);
     });
 
+    enterScreen.style.display = "none";
+});
 
-    /* =========================
-       SURPRISE IMAGE POOL
-    ========================= */
 
-    const imagePool = [
-        "images/IMG_2173.jpg",
-        "images/IMG_2176.jpg",
-        "images/IMG_6410-2.jpg",
-        "images/IMG_6413-2.jpg",
-        "images/IMG_6414-1.jpg",
-        "images/IMG_6415-1.jpg",
-        "images/666.png",
-        "images/67.jpg"
-    ];
+/* =========================
+   SURPRISE IMAGE POOL
+========================= */
 
-    const surpriseButton = document.getElementById("surpriseButton");
-    const surpriseImage = document.getElementById("surpriseImage");
+const imagePool = [
+    "images/2173.jpg",
+    "images/2176.jpg",
+    "images/6410-2.jpg",
+    "images/6413-2.jpg",
+    "images/6414-1.jpg",
+    "images/6415-1.jpg",
+    "images/666.png",
+    "images/67.jpg"
+];
 
-    surpriseButton.addEventListener("click", () => {
+const surpriseButton =
+    document.getElementById("surpriseButton");
 
-        const randomIndex =
-            Math.floor(Math.random() * imagePool.length);
+const surpriseImage =
+    document.getElementById("surpriseImage");
 
-        surpriseImage.src = imagePool[randomIndex];
+surpriseButton.addEventListener("click", () => {
 
-        surpriseImage.classList.add("show");
-    });
+    const randomIndex =
+        Math.floor(Math.random() * imagePool.length);
+
+    surpriseImage.src = imagePool[randomIndex];
+
+    surpriseImage.classList.add("show");
+});
+
+
+/* =========================
+   CV
+========================= */
+
+const cvButton =
+    document.getElementById("cvButton");
+
+const cvOverlay =
+    document.getElementById("cvOverlay");
+
+const closeCV =
+    document.getElementById("closeCV");
+
+cvButton.addEventListener("click", () => {
+    cvOverlay.style.display = "flex";
+});
+
+closeCV.addEventListener("click", () => {
+    cvOverlay.style.display = "none";
+});
+
+cvOverlay.addEventListener("click", (event) => {
+
+    if (event.target === cvOverlay) {
+        cvOverlay.style.display = "none";
+    }
+
+});
 
 </script>
 
