@@ -3,205 +3,238 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Countdown</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-body {
-    margin: 0;
-    min-height: 100vh;
+    body {
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        color: white;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        background:
+            linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)),
+            url("background.jpg") center / cover no-repeat;
 
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-    text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
 
-    background:
-        linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)),
-        url("background.jpg") center / cover no-repeat;
+    /* Dark glass overlay */
+    #main {
+        width: 95%;
+        max-width: 1100px;
+        text-align: center;
+    }
 
-    overflow: hidden;
-}
+    h1 {
+        font-size: clamp(28px, 5vw, 55px);
+        margin-bottom: 35px;
+        text-shadow: 0 0 20px rgba(255,255,255,.35);
+    }
 
-/* ENTER SCREEN */
+    /* Countdown bar */
+    #countdown {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
 
-#enterScreen {
-    position: fixed;
-    inset: 0;
+        background: rgba(0,0,0,.55);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        border: 1px solid rgba(255,255,255,.15);
+        border-radius: 20px;
 
-    background: rgba(0,0,0,.65);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+        box-shadow:
+            0 0 30px rgba(0,0,0,.5),
+            inset 0 0 20px rgba(255,255,255,.03);
 
-    z-index: 10;
-}
-
-#enterButton {
-    padding: 18px 55px;
-
-    border: 1px solid rgba(255,255,255,.4);
-    border-radius: 50px;
-
-    background: rgba(255,255,255,.08);
-    color: white;
-
-    font-size: 18px;
-    letter-spacing: 4px;
-
-    cursor: pointer;
-
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-
-    transition: .25s;
-}
-
-#enterButton:hover {
-    background: rgba(255,255,255,.18);
-    transform: scale(1.04);
-}
-
-/* MAIN CONTENT */
-
-.container {
-    width: 94%;
-    max-width: 1100px;
-
-    opacity: 0;
-    transform: translateY(15px);
-
-    transition: opacity 1s ease, transform 1s ease;
-}
-
-.container.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.title {
-    font-size: clamp(22px, 4vw, 42px);
-    line-height: 1.35;
-
-    margin-bottom: 35px;
-
-    text-shadow: 0 3px 15px black;
-}
-
-.title strong {
-    font-weight: 700;
-}
-
-/* SINGLE COUNTDOWN BAR */
-
-.countdown-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 100%;
-    padding: 14px 10px;
-
-    background: rgba(0,0,0,.65);
-
-    border: 1px solid rgba(255,255,255,.3);
-    border-radius: 20px;
-
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
-    box-shadow: 0 10px 40px rgba(0,0,0,.7);
-}
-
-.unit {
-    flex: 1;
-    min-width: 0;
-
-    padding: 5px 8px;
-
-    border-right: 1px solid rgba(255,255,255,.18);
-}
-
-.unit:last-child {
-    border-right: none;
-}
-
-.number {
-    font-size: clamp(22px, 4vw, 42px);
-    font-weight: bold;
-}
-
-.label {
-    margin-top: 4px;
-
-    font-size: 9px;
-    letter-spacing: 2px;
-
-    text-transform: uppercase;
-    opacity: .5;
-}
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .countdown-bar {
-        padding: 10px 3px;
+        overflow: hidden;
     }
 
     .unit {
-        padding: 4px 2px;
+        flex: 1;
+        padding: 22px 10px;
+        min-width: 0;
+    }
+
+    .unit:not(:last-child) {
+        border-right: 1px solid rgba(255,255,255,.15);
     }
 
     .number {
-        font-size: 20px;
+        font-size: clamp(20px, 4vw, 42px);
+        font-weight: bold;
+        text-shadow: 0 0 15px rgba(255,255,255,.3);
     }
 
     .label {
-        font-size: 7px;
+        margin-top: 6px;
+        font-size: clamp(9px, 1.5vw, 14px);
+        opacity: .6;
+        text-transform: uppercase;
         letter-spacing: 1px;
     }
-}
+
+    /* ENTER screen */
+    #enterScreen {
+        position: fixed;
+        inset: 0;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background: rgba(0,0,0,.9);
+        z-index: 1000;
+    }
+
+    #enterButton {
+        padding: 18px 55px;
+        font-size: 22px;
+        font-weight: bold;
+
+        color: white;
+        background: rgba(255,255,255,.08);
+
+        border: 1px solid rgba(255,255,255,.3);
+        border-radius: 15px;
+
+        cursor: pointer;
+
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+
+        box-shadow: 0 0 30px rgba(255,255,255,.08);
+
+        transition: .25s;
+    }
+
+    #enterButton:hover {
+        transform: scale(1.05);
+        background: rgba(255,255,255,.15);
+        box-shadow: 0 0 40px rgba(255,255,255,.2);
+    }
+
+    /* Surprise button */
+    #surpriseButton {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+
+        padding: 12px 24px;
+
+        color: white;
+        background: rgba(0,0,0,.5);
+
+        border: 1px solid rgba(255,255,255,.2);
+        border-radius: 12px;
+
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+
+        cursor: pointer;
+        font-size: 15px;
+
+        z-index: 100;
+        transition: .25s;
+    }
+
+    #surpriseButton:hover {
+        transform: translateX(-50%) scale(1.05);
+        background: rgba(255,255,255,.12);
+    }
+
+    /* Surprise image */
+    #surpriseImage {
+        position: fixed;
+
+        top: 75px;
+        left: 50%;
+
+        transform: translateX(-50%);
+
+        max-width: 85vw;
+        max-height: 65vh;
+
+        object-fit: contain;
+
+        border-radius: 15px;
+
+        border: 1px solid rgba(255,255,255,.2);
+
+        box-shadow:
+            0 0 40px rgba(0,0,0,.8),
+            0 0 20px rgba(255,255,255,.08);
+
+        opacity: 0;
+        pointer-events: none;
+
+        transition: opacity .3s;
+
+        z-index: 99;
+    }
+
+    #surpriseImage.show {
+        opacity: 1;
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+
+        #countdown {
+            border-radius: 14px;
+        }
+
+        .unit {
+            padding: 15px 4px;
+        }
+
+        .number {
+            font-size: 18px;
+        }
+
+        .label {
+            font-size: 7px;
+            letter-spacing: .5px;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+    }
 </style>
 </head>
 
 <body>
 
 <!-- ENTER SCREEN -->
-
 <div id="enterScreen">
-    <button id="enterButton">
-        ENTER
-    </button>
+    <button id="enterButton">ENTER</button>
 </div>
 
-<!-- MUSIC -->
+<!-- SURPRISE BUTTON -->
+<button id="surpriseButton">Surprise me!</button>
 
-<audio id="music" loop>
-    <source src="videoplayback.m4a" type="audio/mp4">
-</audio>
+<!-- RANDOM IMAGE -->
+<img id="surpriseImage" src="" alt="Surprise image">
 
-<!-- COUNTDOWN -->
+<!-- MAIN CONTENT -->
+<div id="main">
 
-<div class="container" id="main">
+    <h1>Countdown</h1>
 
-    <div class="title">
-        If Mel and Maddox are still together in
-        <strong>1 Year and 6 Months</strong>,
-        I am a failure.
-    </div>
-
-    <div class="countdown-bar">
+    <div id="countdown">
 
         <div class="unit">
             <div class="number" id="years">0</div>
@@ -239,132 +272,118 @@ body {
         </div>
 
     </div>
-
 </div>
+
+<!-- MUSIC -->
+<audio id="music" loop>
+    <source src="videoplayback.m4a" type="audio/mp4">
+</audio>
 
 <script>
 
-/* MUSIC + ENTER */
+    /* =========================
+       COUNTDOWN
+    ========================= */
 
-const enterScreen = document.getElementById("enterScreen");
-const enterButton = document.getElementById("enterButton");
-const music = document.getElementById("music");
-const main = document.getElementById("main");
+    const target = new Date("March 4, 2028 00:00:00");
 
-music.volume = 0.5;
+    function updateCountdown() {
 
-enterButton.addEventListener("click", () => {
+        const now = new Date();
+        let difference = target - now;
 
-    music.play();
+        if (difference <= 0) {
+            document.getElementById("years").textContent = "0";
+            document.getElementById("months").textContent = "0";
+            document.getElementById("weeks").textContent = "0";
+            document.getElementById("days").textContent = "0";
+            document.getElementById("hours").textContent = "0";
+            document.getElementById("minutes").textContent = "0";
+            document.getElementById("seconds").textContent = "0";
+            return;
+        }
 
-    enterScreen.style.opacity = "0";
-    enterScreen.style.pointerEvents = "none";
+        const secondsTotal = Math.floor(difference / 1000);
 
-    main.classList.add("visible");
+        const seconds = secondsTotal % 60;
+        const minutes = Math.floor(secondsTotal / 60) % 60;
+        const hours = Math.floor(secondsTotal / 3600) % 24;
 
-    setTimeout(() => {
+        const totalDays = Math.floor(secondsTotal / 86400);
+
+        const years = Math.floor(totalDays / 365);
+        const remainingDaysAfterYears = totalDays % 365;
+
+        const months = Math.floor(remainingDaysAfterYears / 30);
+        const remainingDays = remainingDaysAfterYears % 30;
+
+        const weeks = Math.floor(remainingDays / 7);
+        const days = remainingDays % 7;
+
+        document.getElementById("years").textContent = years;
+        document.getElementById("months").textContent = months;
+        document.getElementById("weeks").textContent = weeks;
+        document.getElementById("days").textContent = days;
+
+        document.getElementById("hours").textContent =
+            String(hours).padStart(2, "0");
+
+        document.getElementById("minutes").textContent =
+            String(minutes).padStart(2, "0");
+
+        document.getElementById("seconds").textContent =
+            String(seconds).padStart(2, "0");
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+
+    /* =========================
+       MUSIC / ENTER BUTTON
+    ========================= */
+
+    const enterScreen = document.getElementById("enterScreen");
+    const enterButton = document.getElementById("enterButton");
+    const music = document.getElementById("music");
+
+    enterButton.addEventListener("click", () => {
+
+        music.play().catch(error => {
+            console.log("Music could not start:", error);
+        });
+
         enterScreen.style.display = "none";
-    }, 1000);
-
-});
+    });
 
 
-/* COUNTDOWN */
+    /* =========================
+       SURPRISE IMAGE POOL
+    ========================= */
 
-const target = new Date("March 3, 2028 00:00:00");
+    const imagePool = [
+        "images/2173.jpg",
+        "images/2176.jpg",
+        "images/6410-2.jpg",
+        "images/6413-2.jpg",
+        "images/6414-1.jpg",
+        "images/6415-1.jpg",
+        "images/666.png",
+        "images/67.jpg"
+    ];
 
-function updateCountdown() {
+    const surpriseButton = document.getElementById("surpriseButton");
+    const surpriseImage = document.getElementById("surpriseImage");
 
-    const now = new Date();
+    surpriseButton.addEventListener("click", () => {
 
-    if (now >= target) {
+        const randomIndex =
+            Math.floor(Math.random() * imagePool.length);
 
-        document.querySelector(".countdown-bar").innerHTML =
-            '<div class="number">TIME IS UP.</div>';
+        surpriseImage.src = imagePool[randomIndex];
 
-        return;
-    }
-
-    let years =
-        target.getFullYear() - now.getFullYear();
-
-    let months =
-        target.getMonth() - now.getMonth();
-
-    if (months < 0) {
-        years--;
-        months += 12;
-    }
-
-    const calendarDate = new Date(now);
-
-    calendarDate.setFullYear(
-        calendarDate.getFullYear() + years
-    );
-
-    calendarDate.setMonth(
-        calendarDate.getMonth() + months
-    );
-
-    let remaining = target - calendarDate;
-
-    const weeks = Math.floor(
-        remaining / (1000 * 60 * 60 * 24 * 7)
-    );
-
-    remaining -=
-        weeks * 1000 * 60 * 60 * 24 * 7;
-
-    const days = Math.floor(
-        remaining / (1000 * 60 * 60 * 24)
-    );
-
-    remaining -=
-        days * 1000 * 60 * 60 * 24;
-
-    const hours = Math.floor(
-        remaining / (1000 * 60 * 60)
-    );
-
-    remaining -=
-        hours * 1000 * 60 * 60;
-
-    const minutes = Math.floor(
-        remaining / (1000 * 60)
-    );
-
-    remaining -=
-        minutes * 1000 * 60;
-
-    const seconds =
-        Math.floor(remaining / 1000);
-
-
-    document.getElementById("years").textContent =
-        years;
-
-    document.getElementById("months").textContent =
-        months;
-
-    document.getElementById("weeks").textContent =
-        weeks;
-
-    document.getElementById("days").textContent =
-        days;
-
-    document.getElementById("hours").textContent =
-        hours;
-
-    document.getElementById("minutes").textContent =
-        minutes;
-
-    document.getElementById("seconds").textContent =
-        seconds;
-}
-
-updateCountdown();
-
-setInterval(updateCountdown, 1000);
+        surpriseImage.classList.add("show");
+    });
 
 </script>
 
