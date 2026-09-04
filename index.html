@@ -6,10 +6,19 @@
 <title>Countdown</title>
 
 <style>
+
+/* =========================
+   GLOBAL
+========================= */
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
@@ -19,33 +28,63 @@ body {
 
     background:
         linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)),
-        url("background.jpg") center / cover no-repeat;
+        url("background.jpg") center / cover no-repeat fixed;
 
     display: flex;
     justify-content: center;
     align-items: center;
+
     overflow: hidden;
+
+    animation: pageFadeIn 1.2s ease;
 }
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
 
 #main {
     width: 95%;
     max-width: 1100px;
     text-align: center;
+
+    animation: mainAppear 1.2s ease;
 }
 
 h1 {
     font-size: clamp(28px, 5vw, 55px);
     margin-bottom: 35px;
-    text-shadow: 0 0 20px rgba(255,255,255,.35);
+
+    text-shadow:
+        0 0 20px rgba(255,255,255,.35);
+
+    transition:
+        transform .5s ease,
+        text-shadow .5s ease;
 }
+
+h1:hover {
+    transform: scale(1.03);
+
+    text-shadow:
+        0 0 30px rgba(255,255,255,.5);
+}
+
+
+/* =========================
+   COUNTDOWN BAR
+========================= */
 
 #countdown {
     width: 100%;
+
     display: flex;
     justify-content: center;
     align-items: stretch;
 
     background: rgba(0,0,0,.55);
+
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
 
@@ -57,12 +96,34 @@ h1 {
         inset 0 0 20px rgba(255,255,255,.03);
 
     overflow: hidden;
+
+    transition:
+        transform .5s ease,
+        box-shadow .5s ease,
+        background .5s ease;
+}
+
+#countdown:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,.6),
+        0 0 25px rgba(255,255,255,.05);
 }
 
 .unit {
     flex: 1;
     padding: 22px 10px;
     min-width: 0;
+
+    transition:
+        background .35s ease,
+        transform .35s ease;
+}
+
+.unit:hover {
+    background: rgba(255,255,255,.05);
+    transform: translateY(-2px);
 }
 
 .unit:not(:last-child) {
@@ -72,18 +133,39 @@ h1 {
 .number {
     font-size: clamp(20px, 4vw, 42px);
     font-weight: bold;
-    text-shadow: 0 0 15px rgba(255,255,255,.3);
+
+    text-shadow:
+        0 0 15px rgba(255,255,255,.3);
+
+    transition:
+        transform .25s ease,
+        text-shadow .25s ease;
 }
 
 .label {
     margin-top: 6px;
+
     font-size: clamp(9px, 1.5vw, 14px);
+
     opacity: .6;
+
     text-transform: uppercase;
     letter-spacing: 1px;
+
+    transition:
+        opacity .3s ease,
+        letter-spacing .3s ease;
 }
 
-/* ENTER SCREEN */
+.unit:hover .label {
+    opacity: .9;
+    letter-spacing: 1.5px;
+}
+
+
+/* =========================
+   ENTER SCREEN
+========================= */
 
 #enterScreen {
     position: fixed;
@@ -93,16 +175,29 @@ h1 {
     justify-content: center;
     align-items: center;
 
-    background: rgba(0,0,0,.9);
+    background: rgba(0,0,0,.92);
+
     z-index: 1000;
+
+    transition:
+        opacity .8s ease,
+        visibility .8s ease;
+}
+
+#enterScreen.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 #enterButton {
     padding: 18px 55px;
+
     font-size: 22px;
     font-weight: bold;
 
     color: white;
+
     background: rgba(255,255,255,.08);
 
     border: 1px solid rgba(255,255,255,.3);
@@ -113,18 +208,35 @@ h1 {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 
-    box-shadow: 0 0 30px rgba(255,255,255,.08);
+    box-shadow:
+        0 0 30px rgba(255,255,255,.08);
 
-    transition: .25s;
+    transition:
+        transform .35s cubic-bezier(.2,.8,.2,1),
+        background .35s ease,
+        box-shadow .35s ease,
+        border-color .35s ease;
 }
 
 #enterButton:hover {
-    transform: scale(1.05);
+    transform: scale(1.07);
+
     background: rgba(255,255,255,.15);
-    box-shadow: 0 0 40px rgba(255,255,255,.2);
+
+    border-color: rgba(255,255,255,.5);
+
+    box-shadow:
+        0 0 45px rgba(255,255,255,.2);
 }
 
-/* TOP BUTTONS */
+#enterButton:active {
+    transform: scale(.94);
+}
+
+
+/* =========================
+   TOP BUTTONS
+========================= */
 
 #surpriseButton,
 #cvButton {
@@ -134,6 +246,7 @@ h1 {
     padding: 12px 24px;
 
     color: white;
+
     background: rgba(0,0,0,.5);
 
     border: 1px solid rgba(255,255,255,.2);
@@ -143,10 +256,16 @@ h1 {
     -webkit-backdrop-filter: blur(10px);
 
     cursor: pointer;
+
     font-size: 15px;
 
     z-index: 100;
-    transition: .25s;
+
+    transition:
+        transform .35s cubic-bezier(.2,.8,.2,1),
+        background .35s ease,
+        box-shadow .35s ease,
+        border-color .35s ease;
 }
 
 #surpriseButton {
@@ -159,11 +278,26 @@ h1 {
 
 #surpriseButton:hover,
 #cvButton:hover {
-    transform: scale(1.05);
+    transform: translateY(-3px) scale(1.05);
+
     background: rgba(255,255,255,.12);
+
+    border-color: rgba(255,255,255,.35);
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.4),
+        0 0 15px rgba(255,255,255,.05);
 }
 
-/* SURPRISE IMAGE */
+#surpriseButton:active,
+#cvButton:active {
+    transform: scale(.94);
+}
+
+
+/* =========================
+   SURPRISE IMAGE
+========================= */
 
 #surpriseImage {
     position: fixed;
@@ -171,7 +305,10 @@ h1 {
     top: 75px;
     left: 50%;
 
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%)
+        scale(.92)
+        translateY(-10px);
 
     max-width: 85vw;
     max-height: 65vh;
@@ -187,24 +324,35 @@ h1 {
         0 0 20px rgba(255,255,255,.08);
 
     opacity: 0;
+
     pointer-events: none;
 
-    transition: opacity .3s;
+    transition:
+        opacity .5s ease,
+        transform .6s cubic-bezier(.2,.8,.2,1);
 
     z-index: 99;
 }
 
 #surpriseImage.show {
     opacity: 1;
+
+    transform:
+        translateX(-50%)
+        scale(1)
+        translateY(0);
 }
 
-/* CV */
+
+/* =========================
+   CV OVERLAY
+========================= */
 
 #cvOverlay {
     position: fixed;
     inset: 0;
 
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
 
@@ -216,7 +364,26 @@ h1 {
     -webkit-backdrop-filter: blur(8px);
 
     z-index: 500;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        opacity .45s ease,
+        visibility .45s ease;
 }
+
+#cvOverlay.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+
+/* =========================
+   CV BOX
+========================= */
 
 #cvBox {
     position: relative;
@@ -230,31 +397,75 @@ h1 {
     padding: 35px;
 
     color: white;
+
     background: rgba(20,20,20,.95);
 
     border: 1px solid rgba(255,255,255,.2);
     border-radius: 18px;
 
-    box-shadow: 0 0 50px rgba(0,0,0,.8);
+    box-shadow:
+        0 0 50px rgba(0,0,0,.8);
 
     text-align: left;
+
+    transform:
+        scale(.9)
+        translateY(30px);
+
+    opacity: 0;
+
+    transition:
+        transform .5s cubic-bezier(.2,.8,.2,1),
+        opacity .4s ease;
 }
+
+#cvOverlay.open #cvBox {
+    transform:
+        scale(1)
+        translateY(0);
+
+    opacity: 1;
+}
+
+
+/* CV heading */
 
 #cvBox h2 {
     text-align: center;
+
     margin-bottom: 8px;
+
+    font-size: clamp(24px, 5vw, 36px);
+
+    text-shadow:
+        0 0 15px rgba(255,255,255,.2);
 }
 
 #parodyNotice {
     text-align: center;
+
     opacity: .55;
+
     font-size: 12px;
+
     margin-bottom: 30px;
 }
+
+
+/* CV sections */
 
 #cvBox h3 {
     margin-top: 25px;
     margin-bottom: 10px;
+
+    font-size: 19px;
+
+    transition:
+        letter-spacing .3s ease;
+}
+
+#cvBox h3:hover {
+    letter-spacing: .5px;
 }
 
 #cvBox p,
@@ -266,20 +477,108 @@ h1 {
     padding-left: 25px;
 }
 
+#cvBox li {
+    margin-bottom: 3px;
+}
+
+
+/* CV close button */
+
 #closeCV {
     position: absolute;
+
     top: 15px;
     right: 15px;
 
-    background: none;
-    border: none;
+    width: 35px;
+    height: 35px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(255,255,255,.05);
+
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 50%;
+
     color: white;
 
-    font-size: 22px;
+    font-size: 18px;
+
     cursor: pointer;
+
+    transition:
+        transform .3s ease,
+        background .3s ease,
+        border-color .3s ease;
 }
 
-/* MOBILE */
+#closeCV:hover {
+    transform: rotate(90deg) scale(1.1);
+
+    background: rgba(255,255,255,.15);
+
+    border-color: rgba(255,255,255,.3);
+}
+
+#closeCV:active {
+    transform: rotate(90deg) scale(.9);
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+#cvBox::-webkit-scrollbar {
+    width: 7px;
+}
+
+#cvBox::-webkit-scrollbar-track {
+    background: rgba(255,255,255,.03);
+}
+
+#cvBox::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.2);
+    border-radius: 10px;
+}
+
+#cvBox::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,.35);
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes mainAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 600px) {
 
@@ -320,96 +619,204 @@ h1 {
 
     #cvBox {
         padding: 25px 20px;
+        max-height: 88vh;
+    }
+
+    #enterButton {
+        padding: 16px 45px;
+        font-size: 20px;
     }
 }
+
 </style>
 </head>
 
+
 <body>
 
-<!-- ENTER SCREEN -->
+
+<!-- =========================
+     ENTER SCREEN
+========================= -->
 
 <div id="enterScreen">
-    <button id="enterButton">ENTER</button>
+
+    <button id="enterButton">
+        ENTER
+    </button>
+
 </div>
 
-<!-- TOP BUTTONS -->
 
-<button id="surpriseButton">Surprise me!</button>
-<button id="cvButton">CV</button>
+<!-- =========================
+     TOP BUTTONS
+========================= -->
 
-<!-- RANDOM IMAGE -->
+<button id="surpriseButton">
+    Surprise me!
+</button>
 
-<img id="surpriseImage" src="" alt="Surprise image">
+<button id="cvButton">
+    CV
+</button>
 
-<!-- MAIN CONTENT -->
+
+<!-- =========================
+     SURPRISE IMAGE
+========================= -->
+
+<img
+    id="surpriseImage"
+    src=""
+    alt="Surprise image"
+>
+
+
+<!-- =========================
+     MAIN CONTENT
+========================= -->
 
 <div id="main">
 
-    <h1>Countdown</h1>
+    <h1>
+        Countdown
+    </h1>
+
 
     <div id="countdown">
 
-        <div class="unit">
-            <div class="number" id="years">0</div>
-            <div class="label">Years</div>
-        </div>
 
         <div class="unit">
-            <div class="number" id="months">0</div>
-            <div class="label">Months</div>
+
+            <div class="number" id="years">
+                0
+            </div>
+
+            <div class="label">
+                Years
+            </div>
+
         </div>
 
-        <div class="unit">
-            <div class="number" id="weeks">0</div>
-            <div class="label">Weeks</div>
-        </div>
 
         <div class="unit">
-            <div class="number" id="days">0</div>
-            <div class="label">Days</div>
+
+            <div class="number" id="months">
+                0
+            </div>
+
+            <div class="label">
+                Months
+            </div>
+
         </div>
 
-        <div class="unit">
-            <div class="number" id="hours">0</div>
-            <div class="label">Hours</div>
-        </div>
 
         <div class="unit">
-            <div class="number" id="minutes">0</div>
-            <div class="label">Minutes</div>
+
+            <div class="number" id="weeks">
+                0
+            </div>
+
+            <div class="label">
+                Weeks
+            </div>
+
         </div>
 
+
         <div class="unit">
-            <div class="number" id="seconds">0</div>
-            <div class="label">Seconds</div>
+
+            <div class="number" id="days">
+                0
+            </div>
+
+            <div class="label">
+                Days
+            </div>
+
         </div>
+
+
+        <div class="unit">
+
+            <div class="number" id="hours">
+                0
+            </div>
+
+            <div class="label">
+                Hours
+            </div>
+
+        </div>
+
+
+        <div class="unit">
+
+            <div class="number" id="minutes">
+                0
+            </div>
+
+            <div class="label">
+                Minutes
+            </div>
+
+        </div>
+
+
+        <div class="unit">
+
+            <div class="number" id="seconds">
+                0
+            </div>
+
+            <div class="label">
+                Seconds
+            </div>
+
+        </div>
+
 
     </div>
+
 </div>
 
-<!-- CV -->
+
+
+<!-- =========================
+     CV
+========================= -->
 
 <div id="cvOverlay">
 
     <div id="cvBox">
 
-        <button id="closeCV">✕</button>
+        <button id="closeCV">
+            ✕
+        </button>
 
-        <h2>CURRICULUM VITAE</h2>
+
+        <h2>
+            CURRICULUM VITAE
+        </h2>
+
 
         <p id="parodyNotice">
-            NOT A PARODY —  A REAL CV
+            FICTIONAL PARODY — NOT A REAL CV
         </p>
+
 
         <p>
             <strong>Name:</strong> Maddox Mills<br>
-            <strong>Age:</strong> 17<br>
+            <strong>Age:</strong> 28<br>
             <strong>Occupation:</strong> Discord<br>
             <strong>Location:</strong> Kenn
         </p>
 
-        <h3>Professional Profile</h3>
+
+        <h3>
+            Professional Profile
+        </h3>
 
         <p>
             Unemployed individual with a highly inconsistent employment
@@ -425,61 +832,142 @@ h1 {
             remarkable resistance to personal development.
         </p>
 
-        <h3>Employment History</h3>
+
+        <h3>
+            Employment History
+        </h3>
 
         <p>
-            <strong>2025 — 2026 carious Temporary Jobs</strong>
+            <strong>
+                2025 — 2026 carious Temporary Jobs
+            </strong>
         </p>
 
         <ul>
-            <li>Frequently changed workplaces. (Jujutsu Shenanigans-->GTA 5)</li>
-            <li>Developed a reputation for unreliable attendance (and stealing food)</li>
-            <li>Left multiple positions without properly resolving outstanding responsibilities.</li>
-            <li>Demonstrated limited interest in career progression (reportedly only joined for the food)</li>
+            <li>
+                Frequently changed workplaces. (Jujutsu Shenanigans-->GTA 5)
+            </li>
+
+            <li>
+                Developed a reputation for unreliable attendance
+                (and stealing food)
+            </li>
+
+            <li>
+                Left multiple positions without properly resolving
+                outstanding responsibilities.
+            </li>
+
+            <li>
+                Demonstrated limited interest in career progression
+                (reportedly only joined for the food)
+            </li>
         </ul>
 
+
         <p>
-            <strong>Jan. 2026–Present — Unemployed</strong>
+            <strong>
+                Jan. 2026–Present — Unemployed
+            </strong>
         </p>
 
         <ul>
-            <li>No stable employment. (PIP)</li>
-            <li>Spends considerable time attempting to solve problems that are largely consequences of his own previous decisions.</li>
-            <li>Career development currently nonexistent.</li>
+
+            <li>
+                No stable employment. (PIP)
+            </li>
+
+            <li>
+                Spends considerable time attempting to solve problems
+                that are largely consequences of his own previous decisions.
+            </li>
+
+            <li>
+                Career development currently nonexistent.
+            </li>
+
         </ul>
 
-        <h3>Skills</h3>
+
+        <h3>
+            Skills
+        </h3>
 
         <ul>
-            <li>Exceptional ability to eat food</li>
-            <li>Strong experience in avoiding difficult conversations</li>
-            <li>Advanced procrastination</li>
-            <li>Can turn a minor inconvenience into a personal crisis</li>
-            <li>Limited proficiency in taking responsibility.</li>
-            <li>Highly experienced in disappointing people who expected better.</li>
+
+            <li>
+                Exceptional ability to eat food
+            </li>
+
+            <li>
+                Strong experience in avoiding difficult conversations
+            </li>
+
+            <li>
+                Advanced procrastination
+            </li>
+
+            <li>
+                Can turn a minor inconvenience into a personal crisis
+            </li>
+
+            <li>
+                Limited proficiency in taking responsibility.
+            </li>
+
+            <li>
+                Highly experienced in disappointing people who expected better.
+            </li>
+
         </ul>
 
-        <h3>Relationships</h3>
+
+        <h3>
+            Relationships
+        </h3>
 
         <p>
             Romantic relationships: Multiple unsuccessful relationships.
         </p>
 
-        <p>Common contributing factors include:</p>
+        <p>
+            Common contributing factors include:
+        </p>
 
         <ul>
-            <li>Poor communication. (Always)</li>
-            <li>Lack of reliability. (Always)</li>
-            <li>Difficulty accepting responsibility. (Always)</li>
-            <li>Repeatedly making promises that were not kept. (Always)</li>
-            <li>Emotional unavailability. (Always)</li>
+
+            <li>
+                Poor communication. (Always)
+            </li>
+
+            <li>
+                Lack of reliability. (Always)
+            </li>
+
+            <li>
+                Difficulty accepting responsibility. (Always)
+            </li>
+
+            <li>
+                Repeatedly making promises that were not kept. (Always)
+            </li>
+
+            <li>
+                Emotional unavailability. (Always)
+            </li>
+
         </ul>
 
         <p>
-            <strong>Current relationship status:</strong> Single. (Always)
+            <strong>
+                Current relationship status: Single. (Always)
+            </strong>
         </p>
 
-        <h3>Personal Circumstances</h3>
+
+        <h3>
+            Personal Circumstances
+        </h3>
 
         <p>
             A has struggled with substance-related issues and currently lacks
@@ -495,46 +983,68 @@ h1 {
             people to deal with the consequences.
         </p>
 
-        <h3>Education</h3>
+
+        <h3>
+            Education
+        </h3>
 
         <p>
-            <strong>Formal education:</strong> Incomplete / unspecified. (Kicked)
+            <strong>
+                Formal education: Incomplete / unspecified. (Kicked)
+            </strong>
         </p>
 
         <p>
-            <strong>Relevant qualifications:</strong> None currently worth
-            mentioning. (Stole cafeteria food)
+            <strong>
+                Relevant qualifications: None currently worth mentioning.
+                (Stole cafeteria food)
+            </strong>
         </p>
 
-        <h3>References</h3>
+
+        <h3>
+            References
+        </h3>
 
         <p>
             SCR 2025-2026
         </p>
 
     </div>
+
 </div>
 
-<!-- MUSIC -->
 
-<audio id="music" loop>
-    <source src="videoplayback.m4a" type="audio/mp4">
-</audio>
+
+<!-- =========================
+     MUSIC
+========================= -->
+
+<audio id="music"></audio>
+
+
 
 <script>
+
 
 /* =========================
    COUNTDOWN
 ========================= */
 
-const target = new Date("March 4, 2028 00:00:00");
+const target =
+    new Date("March 4, 2028 00:00:00");
+
 
 function updateCountdown() {
 
     const now = new Date();
-    let difference = target - now;
+
+    const difference =
+        target - now;
+
 
     if (difference <= 0) {
+
         document.getElementById("years").textContent = "0";
         document.getElementById("months").textContent = "0";
         document.getElementById("weeks").textContent = "0";
@@ -542,68 +1052,205 @@ function updateCountdown() {
         document.getElementById("hours").textContent = "0";
         document.getElementById("minutes").textContent = "0";
         document.getElementById("seconds").textContent = "0";
+
         return;
     }
 
-    const secondsTotal = Math.floor(difference / 1000);
 
-    const seconds = secondsTotal % 60;
-    const minutes = Math.floor(secondsTotal / 60) % 60;
-    const hours = Math.floor(secondsTotal / 3600) % 24;
+    const secondsTotal =
+        Math.floor(difference / 1000);
 
-    const totalDays = Math.floor(secondsTotal / 86400);
 
-    const years = Math.floor(totalDays / 365);
-    const remainingDaysAfterYears = totalDays % 365;
+    const seconds =
+        secondsTotal % 60;
 
-    const months = Math.floor(remainingDaysAfterYears / 30);
-    const remainingDays = remainingDaysAfterYears % 30;
 
-    const weeks = Math.floor(remainingDays / 7);
-    const days = remainingDays % 7;
+    const minutes =
+        Math.floor(secondsTotal / 60) % 60;
 
-    document.getElementById("years").textContent = years;
-    document.getElementById("months").textContent = months;
-    document.getElementById("weeks").textContent = weeks;
-    document.getElementById("days").textContent = days;
+
+    const hours =
+        Math.floor(secondsTotal / 3600) % 24;
+
+
+    const totalDays =
+        Math.floor(secondsTotal / 86400);
+
+
+    const years =
+        Math.floor(totalDays / 365);
+
+
+    const remainingDaysAfterYears =
+        totalDays % 365;
+
+
+    const months =
+        Math.floor(
+            remainingDaysAfterYears / 30
+        );
+
+
+    const remainingDays =
+        remainingDaysAfterYears % 30;
+
+
+    const weeks =
+        Math.floor(remainingDays / 7);
+
+
+    const days =
+        remainingDays % 7;
+
+
+    document.getElementById("years").textContent =
+        years;
+
+
+    document.getElementById("months").textContent =
+        months;
+
+
+    document.getElementById("weeks").textContent =
+        weeks;
+
+
+    document.getElementById("days").textContent =
+        days;
+
 
     document.getElementById("hours").textContent =
         String(hours).padStart(2, "0");
 
+
     document.getElementById("minutes").textContent =
         String(minutes).padStart(2, "0");
 
+
     document.getElementById("seconds").textContent =
         String(seconds).padStart(2, "0");
+
 }
 
+
 updateCountdown();
+
 setInterval(updateCountdown, 1000);
 
 
+
 /* =========================
-   MUSIC / ENTER
+   MUSIC POOL
 ========================= */
 
-const enterScreen = document.getElementById("enterScreen");
-const enterButton = document.getElementById("enterButton");
-const music = document.getElementById("music");
+const songPool = [
 
-enterButton.addEventListener("click", () => {
+    "Cherie.mp3"
+
+    // Add more songs here later:
+    // "song2.mp3",
+    // "song3.mp3",
+    // "song4.mp3"
+
+];
+
+
+const music =
+    document.getElementById("music");
+
+
+let lastSong = -1;
+
+
+function playRandomSong() {
+
+    if (songPool.length === 0) {
+        return;
+    }
+
+
+    let randomIndex;
+
+
+    /* Avoid immediately playing
+       the same song twice */
+
+    do {
+
+        randomIndex =
+            Math.floor(
+                Math.random() * songPool.length
+            );
+
+    } while (
+        songPool.length > 1 &&
+        randomIndex === lastSong
+    );
+
+
+    lastSong =
+        randomIndex;
+
+
+    music.src =
+        songPool[randomIndex];
+
+
+    music.loop = false;
+
 
     music.play().catch(error => {
-        console.log("Music could not start:", error);
+
+        console.log(
+            "Music could not start:",
+            error
+        );
+
     });
 
-    enterScreen.style.display = "none";
+}
+
+
+/* When a song finishes,
+   automatically select another */
+
+music.addEventListener("ended", () => {
+
+    playRandomSong();
+
 });
 
 
+
 /* =========================
-   SURPRISE IMAGE POOL
+   ENTER BUTTON
+========================= */
+
+const enterScreen =
+    document.getElementById("enterScreen");
+
+
+const enterButton =
+    document.getElementById("enterButton");
+
+
+enterButton.addEventListener("click", () => {
+
+    playRandomSong();
+
+
+    enterScreen.classList.add("hide");
+
+});
+
+
+
+/* =========================
+   IMAGE POOL
 ========================= */
 
 const imagePool = [
+
     "images/2173.jpg",
     "images/2176.jpg",
     "images/6410-2.jpg",
@@ -612,23 +1259,76 @@ const imagePool = [
     "images/6415-1.jpg",
     "images/666.png",
     "images/67.jpg"
+
 ];
 
+
 const surpriseButton =
-    document.getElementById("surpriseButton");
+    document.getElementById(
+        "surpriseButton"
+    );
+
 
 const surpriseImage =
-    document.getElementById("surpriseImage");
+    document.getElementById(
+        "surpriseImage"
+    );
 
-surpriseButton.addEventListener("click", () => {
 
-    const randomIndex =
-        Math.floor(Math.random() * imagePool.length);
+let lastImage = -1;
 
-    surpriseImage.src = imagePool[randomIndex];
 
-    surpriseImage.classList.add("show");
-});
+surpriseButton.addEventListener(
+    "click",
+    () => {
+
+        let randomIndex;
+
+
+        /* Avoid showing
+           the exact same image twice */
+
+        do {
+
+            randomIndex =
+                Math.floor(
+                    Math.random() *
+                    imagePool.length
+                );
+
+        } while (
+            imagePool.length > 1 &&
+            randomIndex === lastImage
+        );
+
+
+        lastImage =
+            randomIndex;
+
+
+        /* Fade out first if an
+           image is already visible */
+
+        surpriseImage.classList.remove(
+            "show"
+        );
+
+
+        setTimeout(() => {
+
+            surpriseImage.src =
+                imagePool[randomIndex];
+
+
+            surpriseImage.classList.add(
+                "show"
+            );
+
+        }, 150);
+
+    }
+);
+
 
 
 /* =========================
@@ -636,29 +1336,91 @@ surpriseButton.addEventListener("click", () => {
 ========================= */
 
 const cvButton =
-    document.getElementById("cvButton");
+    document.getElementById(
+        "cvButton"
+    );
+
 
 const cvOverlay =
-    document.getElementById("cvOverlay");
+    document.getElementById(
+        "cvOverlay"
+    );
+
 
 const closeCV =
-    document.getElementById("closeCV");
+    document.getElementById(
+        "closeCV"
+    );
 
-cvButton.addEventListener("click", () => {
-    cvOverlay.style.display = "flex";
-});
 
-closeCV.addEventListener("click", () => {
-    cvOverlay.style.display = "none";
-});
+/* Open CV */
 
-cvOverlay.addEventListener("click", (event) => {
+cvButton.addEventListener(
+    "click",
+    () => {
 
-    if (event.target === cvOverlay) {
-        cvOverlay.style.display = "none";
+        cvOverlay.classList.add(
+            "open"
+        );
+
     }
+);
 
-});
+
+/* Close CV */
+
+closeCV.addEventListener(
+    "click",
+    () => {
+
+        cvOverlay.classList.remove(
+            "open"
+        );
+
+    }
+);
+
+
+/* Close by clicking
+   outside the CV */
+
+cvOverlay.addEventListener(
+    "click",
+    (event) => {
+
+        if (
+            event.target === cvOverlay
+        ) {
+
+            cvOverlay.classList.remove(
+                "open"
+            );
+
+        }
+
+    }
+);
+
+
+/* Close CV with Escape */
+
+document.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            cvOverlay.classList.remove(
+                "open"
+            );
+
+        }
+
+    }
+);
+
 
 </script>
 
