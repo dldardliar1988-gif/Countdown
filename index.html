@@ -164,6 +164,33 @@ h1:hover {
 
 
 /* =========================
+   DURATION TEXT
+========================= */
+
+#durationText {
+    margin-top: 22px;
+
+    font-size: clamp(14px, 2vw, 20px);
+
+    opacity: .75;
+
+    text-shadow:
+        0 0 15px rgba(255,255,255,.2);
+
+    animation: textAppear 1.5s ease;
+
+    transition:
+        opacity .4s ease,
+        transform .4s ease;
+}
+
+#durationText:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+
+/* =========================
    ENTER SCREEN
 ========================= */
 
@@ -427,9 +454,6 @@ h1:hover {
     opacity: 1;
 }
 
-
-/* CV heading */
-
 #cvBox h2 {
     text-align: center;
 
@@ -450,9 +474,6 @@ h1:hover {
 
     margin-bottom: 30px;
 }
-
-
-/* CV sections */
 
 #cvBox h3 {
     margin-top: 25px;
@@ -482,7 +503,9 @@ h1:hover {
 }
 
 
-/* CV close button */
+/* =========================
+   CV CLOSE BUTTON
+========================= */
 
 #closeCV {
     position: absolute;
@@ -554,6 +577,7 @@ h1:hover {
 ========================= */
 
 @keyframes pageFadeIn {
+
     from {
         opacity: 0;
     }
@@ -561,9 +585,11 @@ h1:hover {
     to {
         opacity: 1;
     }
+
 }
 
 @keyframes mainAppear {
+
     from {
         opacity: 0;
         transform: translateY(20px) scale(.98);
@@ -573,6 +599,21 @@ h1:hover {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+
+}
+
+@keyframes textAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: .75;
+        transform: translateY(0);
+    }
+
 }
 
 
@@ -626,6 +667,7 @@ h1:hover {
         padding: 16px 45px;
         font-size: 20px;
     }
+
 }
 
 </style>
@@ -779,6 +821,11 @@ h1:hover {
 
     </div>
 
+
+    <p id="durationText">
+        Maddox and Mel lasted about 1 Month
+    </p>
+
 </div>
 
 
@@ -844,8 +891,10 @@ h1:hover {
         </p>
 
         <ul>
+
             <li>
-                Frequently changed workplaces. (Jujutsu Shenanigans-->GTA 5)
+                Frequently changed workplaces.
+                (Jujutsu Shenanigans-->GTA 5)
             </li>
 
             <li>
@@ -862,6 +911,7 @@ h1:hover {
                 Demonstrated limited interest in career progression
                 (reportedly only joined for the food)
             </li>
+
         </ul>
 
 
@@ -958,9 +1008,10 @@ h1:hover {
 
         </ul>
 
+
         <p>
             <strong>
-                Current relationship status: Renting a Girlfriend (MELlissa Almonte)
+                Current relationship status: Single. (Always)
             </strong>
         </p>
 
@@ -1028,18 +1079,28 @@ h1:hover {
 
 
 /* =========================
-   COUNTDOWN
+   FROZEN COUNTDOWN
 ========================= */
 
+/*
+   The countdown is frozen at:
+
+   September 13, 2026
+   15:23:00
+
+   Therefore every countdown value
+   stays at zero.
+*/
+
 const target =
-    new Date("March 4, 2028 00:00:00");
+    new Date("September 13, 2026 15:23:00");
 
 
 function updateCountdown() {
 
     const now = new Date();
 
-    const difference =
+    let difference =
         target - now;
 
 
@@ -1054,81 +1115,8 @@ function updateCountdown() {
         document.getElementById("seconds").textContent = "0";
 
         return;
+
     }
-
-
-    const secondsTotal =
-        Math.floor(difference / 1000);
-
-
-    const seconds =
-        secondsTotal % 60;
-
-
-    const minutes =
-        Math.floor(secondsTotal / 60) % 60;
-
-
-    const hours =
-        Math.floor(secondsTotal / 3600) % 24;
-
-
-    const totalDays =
-        Math.floor(secondsTotal / 86400);
-
-
-    const years =
-        Math.floor(totalDays / 365);
-
-
-    const remainingDaysAfterYears =
-        totalDays % 365;
-
-
-    const months =
-        Math.floor(
-            remainingDaysAfterYears / 30
-        );
-
-
-    const remainingDays =
-        remainingDaysAfterYears % 30;
-
-
-    const weeks =
-        Math.floor(remainingDays / 7);
-
-
-    const days =
-        remainingDays % 7;
-
-
-    document.getElementById("years").textContent =
-        years;
-
-
-    document.getElementById("months").textContent =
-        months;
-
-
-    document.getElementById("weeks").textContent =
-        weeks;
-
-
-    document.getElementById("days").textContent =
-        days;
-
-
-    document.getElementById("hours").textContent =
-        String(hours).padStart(2, "0");
-
-
-    document.getElementById("minutes").textContent =
-        String(minutes).padStart(2, "0");
-
-
-    document.getElementById("seconds").textContent =
-        String(seconds).padStart(2, "0");
 
 }
 
@@ -1140,17 +1128,12 @@ setInterval(updateCountdown, 1000);
 
 
 /* =========================
-   MUSIC POOL
+   MUSIC
 ========================= */
 
 const songPool = [
 
-    "Cherie.mp3"
-
-    // Add more songs here later:
-    // "song2.mp3",
-    // "song3.mp3",
-    // "song4.mp3"
+    "warisover.mp3"
 
 ];
 
@@ -1172,14 +1155,12 @@ function playRandomSong() {
     let randomIndex;
 
 
-    /* Avoid immediately playing
-       the same song twice */
-
     do {
 
         randomIndex =
             Math.floor(
-                Math.random() * songPool.length
+                Math.random() *
+                songPool.length
             );
 
     } while (
@@ -1211,14 +1192,14 @@ function playRandomSong() {
 }
 
 
-/* When a song finishes,
-   automatically select another */
+music.addEventListener(
+    "ended",
+    () => {
 
-music.addEventListener("ended", () => {
+        playRandomSong();
 
-    playRandomSong();
-
-});
+    }
+);
 
 
 
@@ -1227,21 +1208,29 @@ music.addEventListener("ended", () => {
 ========================= */
 
 const enterScreen =
-    document.getElementById("enterScreen");
+    document.getElementById(
+        "enterScreen"
+    );
 
 
 const enterButton =
-    document.getElementById("enterButton");
+    document.getElementById(
+        "enterButton"
+    );
 
 
-enterButton.addEventListener("click", () => {
+enterButton.addEventListener(
+    "click",
+    () => {
 
-    playRandomSong();
+        playRandomSong();
 
+        enterScreen.classList.add(
+            "hide"
+        );
 
-    enterScreen.classList.add("hide");
-
-});
+    }
+);
 
 
 
@@ -1285,9 +1274,6 @@ surpriseButton.addEventListener(
         let randomIndex;
 
 
-        /* Avoid showing
-           the exact same image twice */
-
         do {
 
             randomIndex =
@@ -1306,25 +1292,24 @@ surpriseButton.addEventListener(
             randomIndex;
 
 
-        /* Fade out first if an
-           image is already visible */
-
         surpriseImage.classList.remove(
             "show"
         );
 
 
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            surpriseImage.src =
-                imagePool[randomIndex];
+                surpriseImage.src =
+                    imagePool[randomIndex];
 
+                surpriseImage.classList.add(
+                    "show"
+                );
 
-            surpriseImage.classList.add(
-                "show"
-            );
-
-        }, 150);
+            },
+            150
+        );
 
     }
 );
@@ -1381,8 +1366,7 @@ closeCV.addEventListener(
 );
 
 
-/* Close by clicking
-   outside the CV */
+/* Click outside CV */
 
 cvOverlay.addEventListener(
     "click",
@@ -1402,7 +1386,7 @@ cvOverlay.addEventListener(
 );
 
 
-/* Close CV with Escape */
+/* Escape key */
 
 document.addEventListener(
     "keydown",
